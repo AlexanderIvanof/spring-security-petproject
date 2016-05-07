@@ -1,10 +1,23 @@
 <!DOCTYPE html>
+<#import "/spring.ftl" as spring />
+<#assign  security = JspTaglibs["http://www.springframework.org/security/tags"] />
+<#assign xhtmlCompliant = true in spring />
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Admin page</title>
 </head>
 <body>
 
+<form action="<@spring.url '/j_spring_security_logout' />" method="post" id="logoutForm">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+</form>
+
+<@security.authorize access="isAuthenticated()">
+    <h2>Hello, <@security.authentication property="principal.username" /> | <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a></h2>
+</@security.authorize>
+<@security.authorize access="! isAuthenticated()">
+<h2>Not logged in</h2>
+</@security.authorize>
 </body>
 </html>
